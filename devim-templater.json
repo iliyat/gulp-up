@@ -1,0 +1,27 @@
+{
+  "buildDir": "./build",
+  "publicBuildDir": "./build/public",
+  "globs": {
+    "templates": "src/**/*.html",
+    "pugTemplates": "src/**/*.pug",
+    "jsTemplates": "src/**/*.js",
+    "publicFiles": "src/public/**/*",
+    "watch": "src/**/*"
+  },
+  "babel": {
+    "presets": ["env"]
+  },
+  "browsersync": {
+    "server": {
+      "baseDir": "./build"
+    },
+    "open": true
+  },
+  "extMap": {
+    "html": "html",
+    "pug": "html",
+    "js": "js",
+    "css": "css",
+    "styl": "css"
+  }
+}
