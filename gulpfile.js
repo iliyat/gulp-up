@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const config = require('./devim-templater');
+const config = require('./layout-dev-config');
 const pug = require('gulp-pug');
 const path = require('path');
 const del = require('del');
