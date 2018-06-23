@@ -1,72 +1,83 @@
 const gulp = require('gulp');
-const config = require('./layout-dev-config');
 const pug = require('gulp-pug');
+const plumber = require('gulp-plumber');
+const rename = require('gulp-rename');
+const tap = require('gulp-tap');
+const gutil = require('gulp-util');
+const concat = require('gulp-concat');
+const stylus = require('gulp-stylus');
+const autoprefixer = require('gulp-autoprefixer');
+
 const path = require('path');
 const del = require('del');
 const browserify = require('browserify');
 const babelify = require('babelify');
 const buffer = require('vinyl-buffer');
-const plumber = require('gulp-plumber');
-const rename = require('gulp-rename');
-const tap = require('gulp-tap');
-const gutil = require('gulp-util');
 const browserSync = require('browser-sync').create();
 
-const templates = 'src/**/*.html';
-const pugTemplates = 'src/**/*.pug';
-const jsTemplates = 'src/**/*.js';
-const publicFiles = 'src/public/**/*';
+const config = require('./layout-dev-config');
 
 gulp.task('default', ['watch'], () => {
   browserSync.init(config.browsersync);
 });
 
-gulp.task('html', () => {
+gulp.task('pages', () => {
   gulp
-    .src(templates)
-    .pipe(plumber())
-    .pipe(gulp.dest(config.buildDir));
+  .src([config.globs.pages])
+  .pipe(plumber())
+  .pipe(pug())
+  .pipe(gulp.dest(config.buildDirs.pages));
 });
 
-gulp.task('pug', () => {
+gulp.task('stylus', () => {
   gulp
-    .src(pugTemplates)
-    .pipe(plumber())
-    .pipe(pug())
-    .pipe(gulp.dest(config.buildDir));
+  .src([config.globs.stylus, `!${config.globs.publicFiles}`])
+  .pipe(plumber())
+  .pipe(stylus())
+  .pipe(concat('styles.css'))
+  .pipe(autoprefixer({
+    browsers: ['Chrome >= 48',
+      'ChromeAndroid >= 49',
+      'Opera >= 35',
+      'IE >= 9',
+      'Firefox >= 44',
+      'Safari >= 9',
+      'Android >= 4']
+  }))
+  .pipe(gulp.dest(config.buildDirs.css));
 });
 
 gulp.task('js', () => {
   return (
     gulp
-      .src(jsTemplates, { read: false })
-      .pipe(plumber())
-      .pipe(
-        tap(function(file) {
-          gutil.log(`bundling '${file.path}'`);
-          file.contents = browserify(file.path, { debug: true })
-            .transform('babelify', config.babel)
-            .bundle();
-        }),
-      )
-      .pipe(buffer())
-      /*.pipe(
-      rename({
-        extname: '.bundle.js',
+    .src(config.globs.js, { read: false })
+    .pipe(plumber())
+    .pipe(
+      tap(function (file) {
+        gutil.log(`bundling '${file.path}'`);
+        file.contents = browserify(file.path, { debug: true })
+        .transform('babelify', config.babel)
+        .bundle();
       }),
-    )*/
-      .pipe(gulp.dest(config.buildDir))
+    )
+    .pipe(buffer())
+    /*.pipe(
+    rename({
+      extname: '.bundle.js',
+    }),
+  )*/
+    .pipe(gulp.dest(config.buildDirs.js))
   );
 });
 
 gulp.task('copy-public', () => {
-  gulp.src(publicFiles).pipe(gulp.dest(config.publicBuildDir));
+  gulp.src(config.globs.publicFiles).pipe(gulp.dest(config.buildDirs.public));
 });
 
-gulp.task('watch', ['html', 'pug', 'js', 'copy-public'], () => {
+gulp.task('watch', ['pages', 'stylus', 'js', 'copy-public'], () => {
   let watcher = gulp.watch(config.globs.watch, [
-    'html',
-    'pug',
+    'pages',
+    'stylus',
     'js',
     'copy-public',
   ]);
@@ -90,5 +101,3 @@ const cleanDeletedFromBuild = eventPath => {
   gutil.log('Deleting from build: ' + buildPath);
   del.sync(buildPath);
 };
-
-/* todo: stylus, svg */

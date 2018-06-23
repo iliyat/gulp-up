@@ -1,0 +1,20 @@
+include ../blocks/preview/preview
+include ../blocks/head/head
+
+html
+  block head
+    +head()
+  body
+    ul
+      li
+        a(href="/") Home
+      li
+        a(href="/page2.html") Page 2
+      li
+        a(href="/book") Book
+
+    block content
+      h1 Hello world
+
+    block footer
+      footer 2018 Devim

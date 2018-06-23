@@ -1,15 +1,23 @@
 {
   "buildDir": "./build",
-  "publicBuildDir": "./build/public",
+  "buildDirs": {
+    "pages": "./build",
+    "css": "./build/css",
+    "js": "./build/js",
+    "public": "./build/public"
+  },
   "globs": {
-    "templates": "src/**/*.html",
-    "pugTemplates": "src/**/*.pug",
-    "jsTemplates": "src/**/*.js",
+    "pug": "src/pug/**/*.pug",
+    "pages": "src/pug/pages/**/*.pug",
+    "stylus": "src/pug/**/*.styl",
+    "js": "src/js/*.js",
     "publicFiles": "src/public/**/*",
     "watch": "src/**/*"
   },
   "babel": {
-    "presets": ["env"]
+    "presets": [
+      "env"
+    ]
   },
   "browsersync": {
     "server": {
