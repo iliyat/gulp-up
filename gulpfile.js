@@ -15,7 +15,7 @@ const babelify = require('babelify');
 const buffer = require('vinyl-buffer');
 const browserSync = require('browser-sync').create();
 
-const config = require('./layout-dev-config');
+const config = require('./gulp-up-config');
 
 gulp.task('default', ['watch'], () => {
   browserSync.init(config.browsersync);
@@ -23,50 +23,54 @@ gulp.task('default', ['watch'], () => {
 
 gulp.task('pages', () => {
   gulp
-  .src([config.globs.pages])
-  .pipe(plumber())
-  .pipe(pug())
-  .pipe(gulp.dest(config.buildDirs.pages));
+    .src([config.globs.pages])
+    .pipe(plumber())
+    .pipe(pug())
+    .pipe(gulp.dest(config.buildDirs.pages));
 });
 
 gulp.task('stylus', () => {
   gulp
-  .src([config.globs.stylus, `!${config.globs.publicFiles}`])
-  .pipe(plumber())
-  .pipe(stylus())
-  .pipe(concat('styles.css'))
-  .pipe(autoprefixer({
-    browsers: ['Chrome >= 48',
-      'ChromeAndroid >= 49',
-      'Opera >= 35',
-      'IE >= 9',
-      'Firefox >= 44',
-      'Safari >= 9',
-      'Android >= 4']
-  }))
-  .pipe(gulp.dest(config.buildDirs.css));
+    .src([config.globs.stylus, `!${config.globs.publicFiles}`])
+    .pipe(plumber())
+    .pipe(stylus())
+    .pipe(concat('styles.css'))
+    .pipe(
+      autoprefixer({
+        browsers: [
+          'Chrome >= 48',
+          'ChromeAndroid >= 49',
+          'Opera >= 35',
+          'IE >= 9',
+          'Firefox >= 44',
+          'Safari >= 9',
+          'Android >= 4',
+        ],
+      }),
+    )
+    .pipe(gulp.dest(config.buildDirs.css));
 });
 
 gulp.task('js', () => {
   return (
     gulp
-    .src(config.globs.js, { read: false })
-    .pipe(plumber())
-    .pipe(
-      tap(function (file) {
-        gutil.log(`bundling '${file.path}'`);
-        file.contents = browserify(file.path, { debug: true })
-        .transform('babelify', config.babel)
-        .bundle();
-      }),
-    )
-    .pipe(buffer())
-    /*.pipe(
-    rename({
-      extname: '.bundle.js',
-    }),
-  )*/
-    .pipe(gulp.dest(config.buildDirs.js))
+      .src(config.globs.js, { read: false })
+      .pipe(plumber())
+      .pipe(
+        tap(function(file) {
+          gutil.log(`bundling '${file.path}'`);
+          file.contents = browserify(file.path, { debug: true })
+            .transform('babelify', config.babel)
+            .bundle();
+        }),
+      )
+      .pipe(buffer())
+      /*.pipe(
+        rename({
+          extname: '.bundle.js',
+        }),
+      )*/
+      .pipe(gulp.dest(config.buildDirs.js))
   );
 });
 

@@ -1,4 +1,4 @@
-### Шаблон для верстки
+### Frontend project starter with Gulp
 
 Набор gulp задач на смену TARS.
 

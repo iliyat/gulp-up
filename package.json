@@ -1,7 +1,7 @@
 {
-  "name": "watcher",
-  "version": "0.0.1",
-  "description": "watch my file and do my job",
+  "name": "gulp-up",
+  "version": "0.0.3",
+  "description": "Frontend project starter with Gulp",
   "main": "index.js",
   "license": "MIT",
   "private": false,
