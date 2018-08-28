@@ -19,6 +19,17 @@
       "env"
     ]
   },
+  "autoprefixer": {
+    "browsers": [
+      "Chrome >= 48",
+      "ChromeAndroid >= 49",
+      "Opera >= 35",
+      "IE >= 9",
+      "Firefox >= 44",
+      "Safari >= 9",
+      "Android >= 4"
+    ]
+  },
   "browsersync": {
     "server": {
       "baseDir": "./build"

@@ -35,19 +35,7 @@ gulp.task('stylus', () => {
     .pipe(plumber())
     .pipe(stylus())
     .pipe(concat('styles.css'))
-    .pipe(
-      autoprefixer({
-        browsers: [
-          'Chrome >= 48',
-          'ChromeAndroid >= 49',
-          'Opera >= 35',
-          'IE >= 9',
-          'Firefox >= 44',
-          'Safari >= 9',
-          'Android >= 4',
-        ],
-      }),
-    )
+    .pipe(autoprefixer(config.autoprefixer))
     .pipe(gulp.dest(config.buildDirs.css));
 });
 
